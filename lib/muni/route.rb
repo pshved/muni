@@ -62,6 +62,7 @@ module Muni
             direction_stops.each do |stop|
               stop.route_tag = route.tag
               stop.direction = direction['tag']
+              stop.direction_title = direction['title']
             end
 
             Direction.new({
