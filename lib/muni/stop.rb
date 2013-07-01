@@ -10,6 +10,29 @@ module Muni
       end
     end
 
+    def predictions_for_all_routes
+      stop = Stop.send(:fetch, :predictions, stopId: stopId)
+      available_predictions_for_all_routes(stop).inject({}) do |acc, (k,v)|
+        acc[k] = v.map {|pred| Prediction.new(pred)}
+        acc
+      end
+    end
+
+    private
+
+    def available_predictions_for_all_routes(stop)
+      # Check that we got XML that is not an error.
+      return [] unless  stop && stop['predictions']
+      # Find all directions matching the title we requested.
+      raw_predictions = {}
+      stop['predictions'].each do |pred|
+        raw_predictions[pred['routeTitle']] = (pred['direction'] || []).collect do |dir|
+          dir['prediction']
+        end.flatten
+      end
+      raw_predictions
+    end
+
     private
 
     def available_predictions(stop)
