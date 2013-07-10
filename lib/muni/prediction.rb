@@ -16,5 +16,19 @@ module Muni
         "Arriving"
       end
     end
+
+    # Display time as if it was on a muni sign at a bus stop.
+    def muni_time
+      distance = time - Time.now
+      if distance > 60
+        "#{(distance / 60).to_i} min"
+      elsif distance < -10
+        # Not really useful.
+        "#{((-distance) / 60).to_i} min ago"
+      else
+        # Finally!  It took that damn train like forever!
+        "Arriving"
+      end
+    end
   end
 end
